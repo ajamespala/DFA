@@ -103,8 +103,6 @@ class DFA:
 			x = x + 1
 			if (line == '' and x == le):
 				continue
-			#if (line == '' and x == l):
-			#	continue
 			line = re.sub('\n', '', line)
 			#print("Here is the line to run through DFA:")
 			#print(line)
@@ -117,7 +115,7 @@ class DFA:
 			if correct == result:
 				print("Check, DFA works")
 			else:
-				print("ERROR: CORRECT FILE DOES NOT MATCH OUTPUT--------------------")
+				print("ERROR: CORRECT FILE DOES NOT MATCH RESULTS--------------------")
 		output.close()
 	def iterate(self, line):
 		chars = list(line)
