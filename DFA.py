@@ -142,7 +142,7 @@ class DFA:
 		
 
 if __name__ == "__main__":
-	case = input("Choose option: \n\tRun 10 test cases (r)\n\tEnter test files manually (e)\n")
+	case = input("Choose option: \n\tRun 10 test cases automatically (r)\n\tEnter test files manually (e)\n")
 
 	if (case=="r"):
 		for x in range(1,11):
@@ -156,11 +156,15 @@ if __name__ == "__main__":
 			dfa.run_DFA(str_temp, output_str, correct_str)
 	elif (case == "e"):
 		dfa_str = input("Enter in dfa file: ")
-		output_str = input("Enter in output file: ")
-		correct_str +input("Enter file name with correct: ")
+		#output_str = input("Enter in output file: ")
+		output_str = "temp_output.txt"
+		#correct_str = input("Enter file name with correct: ")
 		temp = DFA.create_DFA(dfa_str)
 		str_temp = temp.pop()
 		dfa = temp.pop()
-		dfa.run_DFA(str_temp, output_str, correct_str)	
+		dfa.run_DFA(str_temp, output_str)
+		print("Results: ")
+		f = open(output_str)
+		print(f.read())	
 	else:
 		print("Invalid input")
