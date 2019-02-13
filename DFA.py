@@ -1,3 +1,7 @@
+#Authors: James Pala and Zach Fukuhara
+#COMP370: Automata project 1
+#DFA
+
 import re
 
 class State:
