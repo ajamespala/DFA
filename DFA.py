@@ -1,6 +1,5 @@
 import re
 
-
 class State:
 	def __init__(self,name,start=False,accept=False):
 		self.name = name
@@ -32,9 +31,7 @@ class DFA:
 		self.accept_states = accept_states
 		self.states = {}
 		for transition in transitions:
-#			print(transition)
 			t = transition.split(maxsplit=3)
-#			print(t)
 			end_state = t.pop()
 			tr = t.pop()
 			begin_state = t.pop()
@@ -49,8 +46,6 @@ class DFA:
 				self.states[begin_state] = new_state
 				self.states[begin_state].add_link(tr, end_state)
 
-#			print(str(self.states[begin_state]))
-		#print(self.states)	
 	def __str__(self):
 		string = ""
 		for key, s in self.states.items():
@@ -60,12 +55,8 @@ class DFA:
 	def create_DFA(filename):
 		#read in DFA file
 		f = open(filename)
-		#print("Reading in from file:")
 		num_states = re.sub('\n', '', f.readline())
-		#print("num_states: " + num_states)
 		alphabet = re.sub('\n', '', f.readline())
-		#print("alphabet: " + alphabet)
-		#print("transitions: ")
 		next_line = f.readline()
 		transitions = []
 		while(next_line.find('\'') >= 0):
@@ -73,29 +64,22 @@ class DFA:
 			next_line = re.sub('\'', '', next_line)
 			transitions.append(next_line)
 			next_line = f.readline()
-		#print(str(transitions))
 		next_line = re.sub('\n', '', next_line)
 		start_state = next_line
-		#print("start state: " + start_state)
 		accepts_line = f.readline()
 		accepts_line = re.sub('\n', '', accepts_line)
 		accept_states = accepts_line.split(' ')
-		#print("accept states:" + str(accept_states) + '\n')
 		test_cases = f.read()
-	#	print("rest of file:" + test_cases)
 		return [DFA(num_states, alphabet, start_state, transitions, accept_states), test_cases]
 
 	def run_DFA(self, input, outputfile, correctfile=None):
 		lines = re.split('\n',input)
-		#print(lines)
 		output = open(outputfile, 'w')
 		correct = []
 		result = ""
 		if correctfile:
 			c = open(correctfile)
 			correct = c.read()
-			#print("Correct:")
-			#print(correct)
 			c.close()
 		le = len(lines)
 		x = 0
@@ -104,13 +88,8 @@ class DFA:
 			if (line == '' and x == le):
 				continue
 			line = re.sub('\n', '', line)
-			#print("Here is the line to run through DFA:")
-			#print(line)
 			result = result + self.iterate(line) + "\n"
-			#write answer to outputfile
-			#if correctfile != None, check that file to verify, printout ERROR CORRECT FILE DOES NOT MATCH OUTPUT--------------------
 		output.write(result)
-		#print(result)
 		if correctfile:				
 			if correct == result:
 				print("Check, DFA works")
@@ -154,9 +133,7 @@ if __name__ == "__main__":
 			dfa.run_DFA(str_temp, output_str, correct_str)
 	elif (case == "e"):
 		dfa_str = input("Enter in dfa file: ")
-		#output_str = input("Enter in output file: ")
 		output_str = "temp_output.txt"
-		#correct_str = input("Enter file name with correct: ")
 		temp = DFA.create_DFA(dfa_str)
 		str_temp = temp.pop()
 		dfa = temp.pop()
