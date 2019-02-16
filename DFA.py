@@ -2,6 +2,7 @@
 #COMP370: Automata project 1
 #DFA
 
+import sys
 import re
 
 class State:
@@ -34,6 +35,7 @@ class DFA:
 		self.state_state = re.sub('\n', '', start_state)
 		self.accept_states = accept_states
 		self.states = {}
+		self.results = None
 		for transition in transitions:
 			t = transition.split(maxsplit=3)
 			end_state = t.pop()
@@ -76,9 +78,8 @@ class DFA:
 		test_cases = f.read()
 		return [DFA(num_states, alphabet, start_state, transitions, accept_states), test_cases]
 
-	def run_DFA(self, input, outputfile, correctfile=None):
+	def run_DFA(self, input, outputfile=None, correctfile=None):
 		lines = re.split('\n',input)
-		output = open(outputfile, 'w')
 		correct = []
 		result = ""
 		if correctfile:
@@ -92,14 +93,18 @@ class DFA:
 			if (line == '' and x == le):
 				continue
 			line = re.sub('\n', '', line)
+			res = self.iterate(line)
 			result = result + self.iterate(line) + "\n"
-		output.write(result)
+		if(outputfile is not None):
+			output = open(outputfile, 'w')
+			output.write(result)
+			output.close()
+		self.results = result	
 		if correctfile:				
 			if correct == result:
 				print("Check, DFA works")
 			else:
 				print("ERROR: CORRECT FILE DOES NOT MATCH RESULTS--------------------")
-		output.close()
 	def iterate(self, line):
 		chars = list(line)
 		accept_reject = "Reject"
@@ -123,27 +128,47 @@ class DFA:
 		
 
 if __name__ == "__main__":
-	case = input("Choose option: \n\tRun 10 test cases automatically (r)\n\tEnter test files manually (e)\n")
+	if(len(sys.argv) > 1 and len(sys.argv) < 3):	
+		if(sys.argv[1] == '-r'):
+			for x in range(1,11):
+				dfa_str = "testcases/dfa" + str(x) + ".txt"
+				output_str = "testcases/output" + str(x) + ".txt"
+				correct_str = "testcases/correct" + str(x) + ".txt"
+				print("---File set number " + str(x))
+				temp = DFA.create_DFA(dfa_str)
+				str_temp = temp.pop()
+				dfa = temp.pop()
+				dfa.run_DFA(str_temp, output_str, correct_str)	
+		elif(sys.argv[1] == '-v'):	
+			case = input("Choose option: \n\tRun 10 test cases automatically (r)\n\tEnter test files manually (e)\n")
 
-	if (case=="r"):
-		for x in range(1,11):
-			dfa_str = "testcases/dfa" + str(x) + ".txt"
-			output_str = "testcases/output" + str(x) + ".txt"
-			correct_str = "testcases/correct" + str(x) + ".txt"
-			print("---File set number " + str(x))
+			if (case=="r"):
+				for x in range(1,11):
+					dfa_str = "testcases/dfa" + str(x) + ".txt"
+					output_str = "testcases/output" + str(x) + ".txt"
+					correct_str = "testcases/correct" + str(x) + ".txt"
+					print("---File set number " + str(x))
+					temp = DFA.create_DFA(dfa_str)
+					str_temp = temp.pop()
+					dfa = temp.pop()
+					dfa.run_DFA(str_temp, output_str, correct_str)
+			elif (case == "e"):
+				dfa_str = input("Enter in dfa file: ")
+				output_str = "temp_output.txt"
+				temp = DFA.create_DFA(dfa_str)
+				str_temp = temp.pop()
+				dfa = temp.pop()
+				dfa.run_DFA(str_temp, output_str)
+				print("Results: ")
+				f = open(output_str)
+				print(f.read())	
+		else:
+			dfa_str = sys.argv[1]
 			temp = DFA.create_DFA(dfa_str)
 			str_temp = temp.pop()
 			dfa = temp.pop()
-			dfa.run_DFA(str_temp, output_str, correct_str)
-	elif (case == "e"):
-		dfa_str = input("Enter in dfa file: ")
-		output_str = "temp_output.txt"
-		temp = DFA.create_DFA(dfa_str)
-		str_temp = temp.pop()
-		dfa = temp.pop()
-		dfa.run_DFA(str_temp, output_str)
-		print("Results: ")
-		f = open(output_str)
-		print(f.read())	
+			dfa.run_DFA(str_temp)
+			if(dfa.results is not None):
+				print(dfa.results)
 	else:
-		print("Invalid input")
+		print("DFA [\e[3moptions\e[0m] [\e[3mfilename\e[0m]\n\toptions: -v \e[3mverbose mode\e[0m\n\t -r \e[3mrun test mode, automatically test all 10 test DFA\e[0m\n\t ")
