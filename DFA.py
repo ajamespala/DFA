@@ -169,6 +169,7 @@ if __name__ == "__main__":
 			dfa = temp.pop()
 			dfa.run_DFA(str_temp)
 			if(dfa.results is not None):
-				print(dfa.results)
+				r = dfa.results[:len(dfa.results) - 1]
+				print(r)
 	else:
 		print("DFA [\e[3moptions\e[0m] [\e[3mfilename\e[0m]\n\toptions: -v \e[3mverbose mode\e[0m\n\t -r \e[3mrun test mode, automatically test all 10 test DFA\e[0m\n\t ")
